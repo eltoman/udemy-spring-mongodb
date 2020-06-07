@@ -29,4 +29,10 @@ public class UserResource {
         List<UserDTO> listDto = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
+
+    @RequestMapping(value="/{id}", method=RequestMethod.GET)
+    public ResponseEntity<UserDTO> findById(@PathVariable String id) {
+        User obj = service.findById(id);
+        return ResponseEntity.ok().body(new UserDTO(obj));
+    }
 }
