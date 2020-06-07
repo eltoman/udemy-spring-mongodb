@@ -73,4 +73,8 @@ public class User implements Serializable {
         return true;
     }
 
+    public Boolean isEmpty(){
+        return id == null;
+    }
+
 }

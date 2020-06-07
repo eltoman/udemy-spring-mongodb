@@ -1,6 +1,7 @@
 package com.workshopmongo.services;
 
 import com.workshopmongo.domain.User;
+import com.workshopmongo.dto.UserDTO;
 import com.workshopmongo.repository.UserRepository;
 import com.workshopmongo.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,4 +25,38 @@ public class UserService {
         return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
     }
 
+    public User findByEmail(String email) {
+        List<User> users = userRepository.findAll();
+        User user = users.stream().filter(x -> x.getEmail().toLowerCase().equals(email.toLowerCase())).findFirst().orElse(new User());
+        return user;
+    }
+
+    public boolean isEmailRegistered(String email){
+        User user = findByEmail(email);
+        return !user.isEmpty();
+    }
+
+    public User insert(User obj) {
+        return userRepository.insert(obj);
+    }
+
+    public void delete(String id) {
+        findById(id);
+        userRepository.deleteById(id);
+    }
+
+    public User update(User obj) {
+        User newObj = findById(obj.getId());
+        updateData(newObj, obj);
+        return userRepository.save(newObj);
+    }
+
+    private void updateData(User newObj, User obj) {
+        newObj.setName(obj.getName());
+        newObj.setEmail(obj.getEmail());
+    }
+
+    public User fromDTO(UserDTO objDto) {
+        return new User(objDto.getId(), objDto.getName(), objDto.getEmail());
+    }
 }
