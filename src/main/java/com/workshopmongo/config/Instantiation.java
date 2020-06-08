@@ -34,8 +34,8 @@ private UserService userService;
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-        //userReposiroty.deleteAll();
-        //postReposiroty.deleteAll();
+        userReposiroty.deleteAll();
+        postReposiroty.deleteAll();
 
         List<User> users = new ArrayList<>();
         users.add(new User(null, "Maria Brown", "maria@gmail.com"));
@@ -50,6 +50,10 @@ private UserService userService;
                 Post post2 = new Post(null, sdf.parse("23/03/2018"), "Bom dia " + user.getName(), "Acordei feliz hoje!", author);
 
                 postReposiroty.saveAll(Arrays.asList(post1, post2));
+
+                user.getPosts().addAll(Arrays.asList(post1, post2));
+
+                userReposiroty.save(user);
             }
         }
 
