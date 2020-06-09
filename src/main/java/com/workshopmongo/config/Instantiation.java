@@ -3,6 +3,7 @@ package com.workshopmongo.config;
 import com.workshopmongo.domain.Post;
 import com.workshopmongo.domain.User;
 import com.workshopmongo.dto.AuthorDTO;
+import com.workshopmongo.dto.CommentDTO;
 import com.workshopmongo.repository.PostRepository;
 import com.workshopmongo.repository.UserRepository;
 import com.workshopmongo.services.UserService;
@@ -42,12 +43,22 @@ private UserService userService;
         users.add(new User(null, "Yanna Maria", "yanna@gmail.com"));
         users.add(new User(null, "Obama", "obaminha@gmail.com"));
 
+        //inside joke
+        User comentador = comentador();
+
         for (User user : users){
             if (!userService.isEmailRegistered(user.getEmail())) {
                 user = userReposiroty.save(user);
                 AuthorDTO author = new AuthorDTO(user);
                 Post post1 = new Post(null, sdf.parse("21/03/2018"),  "Partiu viagem " + user.getName() , "Vou viajar para São Paulo. Abraços!", author);
                 Post post2 = new Post(null, sdf.parse("23/03/2018"), "Bom dia " + user.getName(), "Acordei feliz hoje!", author);
+
+                CommentDTO c1 = new CommentDTO("Boa viagem mano!", sdf.parse("21/03/2018"), new AuthorDTO(comentador));
+                CommentDTO c2 = new CommentDTO("Aproveite", sdf.parse("22/03/2018"), new AuthorDTO(comentador));
+                CommentDTO c3 = new CommentDTO("Tenha um ótimo dia!", sdf.parse("23/03/2018"), new AuthorDTO(comentador));
+
+                post1.getComments().addAll(Arrays.asList(c1, c2));
+                post2.getComments().addAll(Arrays.asList(c3));
 
                 postReposiroty.saveAll(Arrays.asList(post1, post2));
 
@@ -58,6 +69,18 @@ private UserService userService;
         }
 
 
+    }
+
+    private User comentador() {
+        String emailNeto = "neto_do_timao@gmail.com";
+        User comentador;
+        if (userService.isEmailRegistered(emailNeto)){
+            comentador = userService.findByEmail(emailNeto);
+        }else {
+            comentador = new User(null, "Craque Neto", emailNeto);
+            userReposiroty.save(comentador);
+        }
+        return comentador;
     }
 
 }
