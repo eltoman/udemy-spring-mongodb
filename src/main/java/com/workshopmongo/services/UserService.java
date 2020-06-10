@@ -26,9 +26,8 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        List<User> users = userRepository.findAll();
-        User user = users.stream().filter(x -> x.getEmail().toLowerCase().equals(email.toLowerCase())).findFirst().orElse(new User());
-        return user;
+        List<User> users = userRepository.findByEmail(email);
+        return users.stream().findFirst().orElse(new User());
     }
 
     public boolean isEmailRegistered(String email){
